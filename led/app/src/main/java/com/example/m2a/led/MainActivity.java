@@ -32,6 +32,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+
+/* UUID 부분 custering 한 것 추가하기 */
+
+
 public class MainActivity extends AppCompatActivity
 {
     private final static int DEVICES_DIALOG = 1;
@@ -402,4 +406,3 @@ public class MainActivity extends AppCompatActivity
         }
     };
 }
-
