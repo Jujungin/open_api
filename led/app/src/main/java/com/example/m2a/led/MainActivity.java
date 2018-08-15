@@ -155,7 +155,7 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    //13. 백버튼이 눌러지거나, ConnectTask에서 예외발생시
+//13. 백버튼이 눌러지거나, ConnectTask에서 예외발생시
 //데이터 수신을 위한 스레드를 종료시키고 CloseTask를 실행하여 입출력 스트림을 닫고,
 //소켓을 닫아 통신을 종료합니다.
     public void doClose() {
@@ -330,8 +330,9 @@ public class MainActivity extends AppCompatActivity
         workerThread.start();
     }
 
-    //12. UI에 입력된 문자열이 있다면 출력 스트림에 기록하고
+//12. UI에 입력된 문자열이 있다면 출력 스트림에 기록하고
 //화면에 "Data Sent"를 출력해줍니다.
+
     void sendData() throws IOException
     {
         String msg = myTextbox.getText().toString();
