@@ -6,3 +6,4 @@ make open api
 
 + UUID clustering
 + lib 제작
++ hybrid application으로 만들어 보기
