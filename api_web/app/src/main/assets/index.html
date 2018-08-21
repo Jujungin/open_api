@@ -1,18 +1,21 @@
+<!DOCTYPE html>
 <html>
-    <head>
-        <h1>Web App Example</h1>
-    </head>
+<head>
+    <meta charset="UTF-8">
+    <title>API_WEB</title>
+    <script type="text/javascript">
+     function test() {
+        var now = new Date();
+        var l = now.getFullYear()+". " + (now.getMonth()+1)+". "+ now.getDate()+"  "+
+                now.getHours()+" : " + now.getMinutes()+" : "+now.getSeconds();
+        document.getElementById("log").innerHTML = l;
 
-    <script language="JavaScript">
-        function test() {
-            alert("click event");
-        }
-    </script>
-
-    <body>
-
-        <form>
-            <input type="button" value='btn' onclick='test()'>
-        </form>
-    </body>
+        setTimeout("test()", 1000);
+    }
+ </script>
+</head>
+<body>
+    <button onclick="test()">LOG</button>
+    <h2><span id="log"></span> </h2>
+</body>
 </html>
