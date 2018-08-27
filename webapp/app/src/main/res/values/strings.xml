@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="string_head">Message from HTML\n</string>
+    <string name="app_name">HybridApp</string>
+    <string name="button_title">Send Message</string>
+    <string name="app_message">This is APP</string>
+</resources>

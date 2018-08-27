@@ -1,0 +1,61 @@
+<html>
+    <head>
+        <style>
+            body {
+                background-color: #FFCCE6;
+            }
+        </style>
+
+        <script language="JavaScript">
+
+            function setMessage(arg) {
+        	    document.getElementById('textMessageFromApp').innerHTML = arg;
+            }
+
+            function setTime(argTime) {
+                document.getElementByID('textTime').innerHTML = argTime;
+            }
+
+            function setTime(argList) {
+                document.getElementByID('textList').innerHTML = argList;
+            }
+
+            function setTime(argConnect) {
+                document.getElementByID('textConnect').innerHTML = argConnect;
+            }
+
+
+
+
+            function sendMessage(msg){
+	            window.MainActivity.setMessage(msg);
+            }
+
+        </script>
+    </head>
+
+    <p>
+        <h2>API_WEB</h2>
+        <hr/>
+
+
+        <input type="text" id="textMessageFromWeb" value="ID : textMessageFromWeb"/>
+        <input type="button" value="Send Message" onclick="sendMessage(document.getElementById('textMessageFromWeb').value)"/>
+
+        // button 추가 했음
+        <input type="text" id="textTime" value="ID : textTime" />
+        <input type="button" id="textTimeBtn" value="ID : textTimeBtn" />
+
+        <input type="text" id="textList" value="ID : textList" />
+        <input type="button" id="textListBtn" value="ID : textListBtn" />
+
+        <input type="text" id="textConnect" value="ID : textConnect" />
+        <input type="button" id="textConnectBtn" value="ID : textConnectBtn" />
+        <hr/>
+
+        Message From App
+        <p id="textMessageFromApp">
+        </p>
+
+    </body>
+</html>
