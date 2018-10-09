@@ -4,29 +4,28 @@
     android:layout_height="fill_parent">
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
 
         <TextView
             android:id="@+id/label"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Type here:"/>
+            android:text="Type here:" />
 
         <EditText
             android:id="@+id/entry"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:background="@android:drawable/editbox_background"
-            android:layout_below="@id/label"/>
+            android:layout_below="@id/label"
+            android:background="@android:drawable/editbox_background" />
 
         <LinearLayout
-            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
 
             <Button
@@ -39,24 +38,30 @@
         </LinearLayout>
 
         <TextView
+            android:id="@+id/recv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:height="25dp"
-            android:text=""
-            android:id="@+id/recv" />
+            android:text="" />
 
 
         <TextView
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text ="Hello" />
+            android:text="Hello" />
 
         <Button
             android:id="@+id/button01"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="recognizing start" />
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="164dp"
+            android:layout_height="wrap_content"
+            android:text="Go WEB" />
     </LinearLayout>
 
 

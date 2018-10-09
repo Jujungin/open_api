@@ -1,9 +1,15 @@
 package com.example.m2a.led;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
 
@@ -17,8 +23,10 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.ContactsContract;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
@@ -31,9 +39,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
-
-/* UUID 부분 custering 한 것 추가하기 */
+import java.util.Date;
 
 
 public class MainActivity extends AppCompatActivity
@@ -43,6 +51,10 @@ public class MainActivity extends AppCompatActivity
 
     public static Context mContext;
     public static AppCompatActivity activity;
+
+    // using file create, read, write
+    final static String foldername = Environment.getExternalStorageDirectory().toString()+"/";
+    final static String filename = "LOG.txt";
 
     TextView myLabel, mRecv;
     EditText myTextbox;
@@ -70,6 +82,17 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
 
+        // String time for LOG_DATA
+
+        // path test code
+        //Toast.makeText(this, getFilesDir().getAbsolutePath(), Toast.LENGTH_LONG).show();
+
+        Toast.makeText(this, foldername, Toast.LENGTH_LONG).show();
+        // create text file and folder
+
+
+
+
         Button sendButton = (Button)findViewById(R.id.send);
         myLabel = (TextView)findViewById(R.id.label);
         myTextbox = (EditText)findViewById(R.id.entry);
@@ -78,7 +101,7 @@ public class MainActivity extends AppCompatActivity
         mContext = this;
         activity=this;
 
-//1.블루투스 사용 가능한지 검사합니다.
+        //BLE test
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (mBluetoothAdapter == null) {
             ErrorDialog("This device is not implement Bluetooth.");
@@ -90,12 +113,12 @@ public class MainActivity extends AppCompatActivity
             return;
         }
         else
-//2. 페어링 되어 있는 블루투스 장치들의 목록을 보여줍니다.
-//3. 목록에서 블루투스 장치를 선택하면 선택한 디바이스를 인자로 하여 doConnect 함수가 호출됩니다.
+        //BLE paring list
+        //if BLE connect , call doConnect function
             DeviceDialog();
 
 
-//11. Send 버튼을 누르면 sendData함수가 호출됩니다.
+        //if press Send button, call sendData
         sendButton.setOnClickListener(new View.OnClickListener()
         {
             public void onClick(View v)
@@ -109,8 +132,9 @@ public class MainActivity extends AppCompatActivity
 
         });
 
-        //음성
-       /* setContentView(R.layout.activity_main);
+        //edit1
+        //start record function
+        setContentView(R.layout.activity_main);
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.RECORD_AUDIO)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -123,7 +147,7 @@ public class MainActivity extends AppCompatActivity
                         new String[]{Manifest.permission.RECORD_AUDIO}, MY_PERMISSIONS_RECORD_AUDIO
                 );
             }
-        }*/
+        }
 
         intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, getPackageName());
@@ -142,6 +166,49 @@ public class MainActivity extends AppCompatActivity
                 mRecognizer.startListening(intent);
             }
         });
+        Button button_web = (Button) findViewById(R.id.button2);
+        button_web.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent_web = new Intent(MainActivity.this, webActivity.class);
+                startActivity(intent_web);
+            }
+        });
+    }
+
+    // LOG contents
+    public void OnFileWrite(String cmd) {
+        String now = new SimpleDateFormat("yyyyMMdd_HH:mm:ss").format(new Date());
+        String contents = now+"_"+cmd+"\n";
+
+        WriteTextFile(foldername, filename, contents);
+
+    }
+
+    // LOG write
+    public void WriteTextFile(String foldername, String filename, String contents) {
+        try{
+            File dir = new File(foldername+"DCIM/work_data");
+            if(!dir.exists()) {
+                dir.mkdir();
+
+                Toast.makeText(this, "success", Toast.LENGTH_LONG).show();
+            }
+
+            File log_file = new File(foldername+"DCIM/work_data/"+filename);
+
+
+            FileOutputStream fos = new FileOutputStream(foldername+"DCIM/work_data/"+filename, true);
+            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(fos));
+            writer.write(contents);
+            writer.flush();
+
+            writer.close();
+            fos.close();
+
+        } catch(IOException e) {
+
+        }
     }
 
     static public Set<BluetoothDevice> getPairedDevices() {
@@ -155,9 +222,8 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-//13. 백버튼이 눌러지거나, ConnectTask에서 예외발생시
-//데이터 수신을 위한 스레드를 종료시키고 CloseTask를 실행하여 입출력 스트림을 닫고,
-//소켓을 닫아 통신을 종료합니다.
+    // press back key or get exceoption, then start thread what end this thread, in-out stream
+    // close socket
     public void doClose() {
         workerThread.interrupt();
         new CloseTask().execute();
@@ -168,16 +234,19 @@ public class MainActivity extends AppCompatActivity
     public void doConnect(BluetoothDevice device) {
         mmDevice = device;
 
-//Standard SerialPortService ID
+        // Standard SerialPortService ID
         UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
 
         try {
-// 4. 지정한 블루투스 장치에 대한 특정 UUID 서비스를 하기 위한 소켓을 생성합니다.
-// 여기선 시리얼 통신을 위한 UUID를 지정하고 있습니다.
+
+            // creat socket using UUID service of BLE module
+            // saving UUID for using serial communication
             mmSocket = mmDevice.createRfcommSocketToServiceRecord(uuid);
-// 5. 블루투스 장치 검색을 중단합니다.
+
+            // end BLE search
             mBluetoothAdapter.cancelDiscovery();
-// 6. ConnectTask를 시작합니다.
+
+            //start ConnectTask
             new ConnectTask().execute();
         } catch (IOException e) {
             Log.e("", e.toString(), e);
@@ -194,16 +263,13 @@ public class MainActivity extends AppCompatActivity
         @Override
         protected Object doInBackground(Void... params) {
             try {
-//7. 블루투스 장치로 연결을 시도합니다.
+                // BLE socket connect
                 mmSocket.connect();
 
-//8. 소켓에 대한 입출력 스트림을 가져옵니다.
+                // bringing in-out stream
                 mmOutputStream = mmSocket.getOutputStream();
                 mmInputStream = mmSocket.getInputStream();
 
-//9. 데이터 수신을 대기하기 위한 스레드를 생성하여 입력스트림로부터의 데이터를 대기하다가
-// 들어오기 시작하면 버퍼에 저장합니다.
-// '\n' 문자가 들어오면 지금까지 버퍼에 저장한 데이터를 UI에 출력하기 위해 핸들러를 사용합니다.
                 beginListenForData();
 
 
@@ -218,7 +284,7 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         protected void onPostExecute(Object result) {
-//10. 블루투스 통신이 연결되었음을 화면에 출력합니다.
+            // print BLE connect status
             myLabel.setText("Bluetooth Opened");
             if (result instanceof Throwable)
             {
@@ -330,9 +396,7 @@ public class MainActivity extends AppCompatActivity
         workerThread.start();
     }
 
-//12. UI에 입력된 문자열이 있다면 출력 스트림에 기록하고
-//화면에 "Data Sent"를 출력해줍니다.
-
+    // String is exist where Textbox, then start sendData function
     void sendData() throws IOException
     {
         String msg = myTextbox.getText().toString();
@@ -344,7 +408,8 @@ public class MainActivity extends AppCompatActivity
         myLabel.setText("Data Sent");
         myTextbox.setText(" ");
     }
-    //음성
+
+    // record function
     private RecognitionListener recognitionListener = new RecognitionListener() {
         @Override
         public void onReadyForSpeech(Bundle bundle) {
@@ -375,6 +440,8 @@ public class MainActivity extends AppCompatActivity
         @Override
         public void onResults(Bundle bundle) {
             String key = "";
+            String[] cmd;
+
             key = SpeechRecognizer.RESULTS_RECOGNITION;
             ArrayList<String> mResult = bundle.getStringArrayList(key);
 
@@ -384,18 +451,31 @@ public class MainActivity extends AppCompatActivity
             mResult.toArray(rs);
 
             textView.setText(rs[0]);
-            if(textView.getText().toString().equals("불 켜"))
-            {
-                myTextbox.setText("a");
-                textView.setText("a");
+            cmd = textView.getText().toString().split("");
 
+            for( int i=0 ; i<cmd.length ; i++) {
+                if( cmd[i].equals("불")) {
+                    for( int j=i ; j<cmd.length ; j++) {
+                        if( cmd[j].equals("켜")) {
+                            myTextbox.setText("a");
+                            textView.setText("a");
+                            OnFileWrite("on");
+                        } else if( cmd[j].equals("꺼")) {
+                            myTextbox.setText("b");
+                            textView.setText("b");
+                            OnFileWrite("off");
+                        }
+
+                    }
+                }
             }
 
-            else if(textView.getText().toString().equals("불 꺼")){
-                myTextbox.setText("b");
-                textView.setText("b");
+            //sendButton.performClick();   //수정1
+            try {
+                sendData();
+            } catch(IOException ex) {
+
             }
-            sendButton.performClick();
         }
 
         @Override
@@ -407,3 +487,4 @@ public class MainActivity extends AppCompatActivity
         }
     };
 }
+

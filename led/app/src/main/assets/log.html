@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<%@page import="org.apache.jasper.tagplugins.jstl.core.Catch"%>
+<%@page import="java.io.IOException"%>
+<%@page import="java.io.FileNotFoundException"%>
+<%@page import="java.io.FileReader"%>
+<%@page import="java.io.BufferedReader"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Insert title here</title>
+
+
+
+    <style type="text/css">
+        #wrap{width:400px; height:600px; background:blue;}
+        #header{width:380px; height:30px; margin-top:20px; margin-left:10px; margin-bottom:10px; background:yellow;}
+        #middle{width:400px; float:left; background:black;}
+        #sidebar{width:100px;height:500px; float:left; margin-left:10px; margin-right:10px; background:gray;}
+        #content{width:270px; height:500px;float:left; background:red;}
+        #footer{width:380px; height:30px; float:left; margin-left:10px; margin-top:10px; background:orange;}
+    </style>
+
+    <script language="JavaScript" type="text/javascript">
+            function setMessage(arg) {
+        	    document.getElementById('textMessageFromApp').innerHTML = arg;
+            }
+
+            function setTime(argTime) {
+                document.getElementByID('textTime').innerHTML = argTime;
+            }
+
+            function setTime(argList) {
+                document.getElementByID('textList').innerHTML = argList;
+            }
+
+            function setTime(argConnect) {
+                document.getElementByID('textConnect').innerHTML = argConnect;
+            }
+
+
+    </script>
+
+
+</head>
+<body>
+
+
+<div id="wrap">
+    <div id="header">header</div>
+    <div id="middle">
+        <div id="sidebar">sidebar
+            <input type="button" value="Send Message" onclick="sendMessage(document.getElementById('textMessageFromWeb').value)"/>
+
+            <input type="button" id="textTimeBtn" value="textTimeBtn" />
+            <input type="button" id="textListBtn" value="textListBtn" />
+            <input type="button" id="textConnectBtn" value="textConnectBtn" />
+            <input type="button" value="log" onclick="location.href='log.html'">
+
+            <input type="button" value="/storage/emulated/0/DCIM/work_data/LOG.txt" onclick="loadFile()" />
+
+        </div>
+        <div id="content">content LOG
+            Message From App
+            <p id="textMessageFromApp">
+            </p>
+        </div>
+    </div>
+    <div id="footer">footer</div>
+</div>
+
+
+</body>
+
+</html>

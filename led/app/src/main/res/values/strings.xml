@@ -1,3 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">led</string>
+    <string name="string_head">Message from HTML\n</string>
+    <string name="app_name">develop_sw_platform</string>
+    <string name="button_title">State</string>
+    <string name="app_message">This is APP</string>
 </resources>
